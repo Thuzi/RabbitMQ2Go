@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>RabbitMQ2Go</id>
+		<version>1.0.0</version>
+		<title>RabbitMQ 2 Go</title>
+		<authors>cy.a.scott</authors>
+		<owners>cy.a.scott</owners>
+		<licenseUrl>https://raw.githubusercontent.com/Thuzi/RabbitMQ2Go/master/LICENSE.md</licenseUrl>
+		<projectUrl>https://github.com/Thuzi/RabbitMQ2Go</projectUrl>
+		<!--
+		Maybe one day when I think of something neat.
+		<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+		-->
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Runs RabbitMQ as a portable process so that integration testing can be done.</description>
+		<copyright>Copyright 2016</copyright>
+		<tags>Erlang RabbitMQ</tags>
+		<dependencies>
+			<dependency id="AllForOne" version="1.0.0.27" />
+			<dependency id="Erlang.OTP.64bit" version="18.3.0" />
+			<dependency id="RabbitMQ" version="3.6.2" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\Release\RabbitMQ2Go.*" target="lib" />
+	</files>
+</package>
