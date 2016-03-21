@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>RabbitMQ</id>
+		<version>3.6.2</version>
+		<title>RabbitMQ</title>
+		<authors>RabbitMQ</authors>
+		<owners>cy.a.scott</owners>
+		<licenseUrl>https://www.rabbitmq.com/mpl.html</licenseUrl>
+		<projectUrl>https://www.rabbitmq.com</projectUrl>
+		<iconUrl>https://www.rabbitmq.com/img/rabbitmq_logo_strap.png</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>The rabbitmq application pulled from their site.</description>
+		<releaseNotes></releaseNotes>
+		<copyright>Copyright 2016</copyright>
+		<tags>RabbitMQ</tags>
+	</metadata>
+	<files>
+		<file src="tools\binary\**\*.*" target="tools\binary" />
+	</files>
+</package>
