@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>Erlang.OTP.64bit</id>
+		<version>18.3.0</version>
+		<title>Erlang OTP 64 Bit</title>
+		<authors>Erlang</authors>
+		<owners>cy.a.scott</owners>
+		<licenseUrl>http://www.erlang.org/EPLICENSE</licenseUrl>
+		<projectUrl>https://www.erlang.org/</projectUrl>
+		<iconUrl>https://www.erlang.org/img/erlang.png</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>The erlang binaries pulled from their site.</description>
+		<releaseNotes></releaseNotes>
+		<copyright>Copyright 2016</copyright>
+		<tags>Erlang</tags>
+	</metadata>
+	<files>
+		<file src="tools\binary\**\*.*" exclude="tools\binary\**\erl.ini" target="tools\binary" />
+		<file src="tools\Install.ps1" target="tools\Install.ps1" />
+		<file src="lib\README.txt" target="lib" />
+	</files>
+</package>
