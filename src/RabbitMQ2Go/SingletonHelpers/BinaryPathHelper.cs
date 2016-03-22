@@ -16,11 +16,7 @@ namespace RabbitMQ2Go.SingletonHelpers
         {
             if (!tryToFindPaths) return;
 
-#if DEBUG
             var packageDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-#else
-            var packageDir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(IBinaryPathHelper)).Location);
-#endif
 
             try
             {

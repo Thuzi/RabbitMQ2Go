@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 
 namespace RabbitMQ2Go.SingletonHelpers
 {
@@ -173,7 +173,7 @@ namespace RabbitMQ2Go.SingletonHelpers
     {
         public RabbitMqEnvironmentVariables()
         {
-            var root = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
+            var root = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             RabbitMqBase = Path.Combine(root, "RabbitMQ");
 
             if (Directory.Exists(RabbitMqBase)) Directory.Delete(RabbitMqBase, true);
