@@ -7,6 +7,10 @@ namespace RabbitMQ2Go.SingletonHelpers
     public interface IRabbitMqEnvironmentVariables
     {
         /// <summary>
+        /// Enables the web portal for RabbitMQ.
+        /// </summary>
+        bool EnableManagement { get; set; }
+        /// <summary>
         /// Name: RABBITMQ_BASE<para/>
         /// Default: %APPDATA%\RabbitMQ<para/>
         /// This base directory contains sub-directories for the RabbitMQ server's database and log files. 
@@ -176,9 +180,11 @@ namespace RabbitMQ2Go.SingletonHelpers
             var root = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             RabbitMqBase = Path.Combine(root, "RabbitMQ");
 
-            if (Directory.Exists(RabbitMqBase)) Directory.Delete(RabbitMqBase, true);
-            Directory.CreateDirectory(RabbitMqBase);
+            if (!Directory.Exists(RabbitMqBase)) Directory.CreateDirectory(RabbitMqBase);
         }
+
+        public bool EnableManagement { get; set; }
+
         public string RabbitMqBase { get; set; }
         public string RabbitMqConfigFile { get; set; }
         public string RabbitMqMnesiaBase { get; set; }
@@ -201,5 +207,14 @@ namespace RabbitMQ2Go.SingletonHelpers
         public string RabbitMqServerErlArgs { get; set; }
         public string RabbitMqServerAdditionalErlArgs { get; set; }
         public string RabbitMqServerStartArgs { get; set; }
+
+        public void CreateRabbitMqBase(bool deleteIfTheFolderExists = true)
+        {
+            var root = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            RabbitMqBase = Path.Combine(root, "RabbitMQ");
+
+            if (deleteIfTheFolderExists && Directory.Exists(RabbitMqBase)) Directory.Delete(RabbitMqBase, true);
+            if (!Directory.Exists(RabbitMqBase)) Directory.CreateDirectory(RabbitMqBase);
+        }
     }
 }

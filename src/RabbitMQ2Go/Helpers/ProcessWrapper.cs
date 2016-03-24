@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Holf.AllForOne;
@@ -77,8 +78,8 @@ namespace RabbitMQ2Go.Helpers
             Arguments = arguments;
             Exe = exe;
         }
-        public Dictionary<string, object> EnvironmentVariables { get; private set; }
-        public Process Process { get; protected set; }
+        public Dictionary<string, object> EnvironmentVariables { get; protected  internal set; }
+        public Process Process { get; protected internal set; }
         public async virtual Task Run()
         {
             if (Interlocked.CompareExchange(ref processStarted, 1, 0) == 1) throw new InvalidOperationException("The process already started.");
@@ -101,6 +102,7 @@ namespace RabbitMQ2Go.Helpers
                 Process.StartInfo.RedirectStandardInput = true;
                 Process.StartInfo.RedirectStandardOutput = true;
                 Process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                Process.StartInfo.WorkingDirectory = Path.GetDirectoryName(Exe) ?? Directory.GetCurrentDirectory();
 
                 foreach (var item in EnvironmentVariables)
                 {
@@ -132,9 +134,9 @@ namespace RabbitMQ2Go.Helpers
                 isReadyTask = null;
             }
         }
-        public object[] Args { get; protected set; }
-        public string Arguments { get; protected set; }
-        public string Exe { get; protected set; }
+        public object[] Args { get; protected internal set; }
+        public string Arguments { get; protected internal set; }
+        public string Exe { get; protected internal set; }
         public virtual TimeSpan RunTimeout
         {
             get

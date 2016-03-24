@@ -20,10 +20,32 @@ namespace RabbitMQ2Go.Helpers
         private IBinaryPathHelper binaryPathHelper;
         private IRabbitMqEnvironmentVariables rabbitMqEnvironmentVariables;
         private WindowsProcess[] erlang;
+        private class rabbitMqManagementProcess : ProcessWrapper
+        {
+            protected override bool BeforeReadyLineReader(string line)
+            {
+#if DEBUG
+                Console.WriteLine(line);
+#endif
+                var returnValue = Regex.IsMatch(line, @".*Applying plugin configuration to .*");
+                return returnValue;
+            }
+            protected override bool UserBeforeReadyLineReader
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
 
         protected override bool BeforeReadyLineReader(string line)
         {
-            return Regex.IsMatch(line, @".*completed with \d+ plugins.*");
+#if DEBUG
+            Console.WriteLine(line);
+#endif
+            var returnValue = Regex.IsMatch(line, @".*completed with \d+ plugins.*");
+            return returnValue;
         }
         protected override bool UserBeforeReadyLineReader
         {
@@ -79,6 +101,12 @@ namespace RabbitMQ2Go.Helpers
         }
         public override async Task Run()
         {
+            if (String.IsNullOrWhiteSpace(RabbitMqEnvironmentVariables.RabbitMqPluginsDir))
+            {
+                RabbitMqEnvironmentVariables.RabbitMqPluginsDir =
+                    Path.Combine(BinaryPathHelper.RabbitMqRoot, "plugins");
+            }
+
             foreach (var valuePair in typeof(IRabbitMqEnvironmentVariables)
                 .GetProperties()
                 .Where(property => property.CanRead && property.PropertyType == typeof(string))
@@ -105,10 +133,33 @@ namespace RabbitMQ2Go.Helpers
 
             EnvironmentVariables["ERLANG_HOME"] = String.Format("\"{0}\\{1}\"", BinaryPathHelper.ErlangRoot.MakePathForErlang(), Path.DirectorySeparatorChar);
             Exe = Path.Combine(BinaryPathHelper.RabbitMqRoot, "sbin", "rabbitmq-server.bat");
-            
-            await base.Run();
 
-            erlang = WindowsProcess.GetProcessesByName("erl");
+            try
+            {
+                await base.Run();
+
+                erlang = WindowsProcess.GetProcessesByName("erl");
+
+                if (RabbitMqEnvironmentVariables.EnableManagement)
+                {
+                    using (var managementProcess = new rabbitMqManagementProcess
+                    {
+                        Arguments = "enable rabbitmq_management",
+                        EnvironmentVariables = EnvironmentVariables,
+                        Exe = Path.Combine(BinaryPathHelper.RabbitMqRoot, "sbin", "rabbitmq-plugins.bat")
+                    })
+                    {
+                        await managementProcess.Run();
+                    }
+                }
+            }
+            catch
+            {
+                foreach (var erl in WindowsProcess.GetProcessesByName("erl"))
+                    using (erl)
+                        erl.Kill();
+                throw;
+            }
 
             foreach (var process in erlang)
                 process.TieLifecycleToParentProcess();
