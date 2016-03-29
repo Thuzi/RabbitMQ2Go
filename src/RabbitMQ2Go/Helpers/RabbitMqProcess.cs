@@ -127,11 +127,11 @@ namespace RabbitMQ2Go.Helpers
                 EnvironmentVariables[valuePair.Name] = valuePair.IoPath == null ?
                     valuePair.Value :
                     valuePair.IoPath.IsDirectory ?
-                        String.Format("\"{0}\\{1}\"", valuePair.Value.MakePathForErlang(), Path.DirectorySeparatorChar) :
-                        String.Format("\"{0}\"", valuePair.Value.MakePathForErlang());
+                        String.Format("{0}\\{1}", valuePair.Value.MakePathForCmd(), Path.DirectorySeparatorChar) :
+                        String.Format("{0}", valuePair.Value.MakePathForCmd());
             }
 
-            EnvironmentVariables["ERLANG_HOME"] = String.Format("\"{0}\\{1}\"", BinaryPathHelper.ErlangRoot.MakePathForErlang(), Path.DirectorySeparatorChar);
+            EnvironmentVariables["ERLANG_HOME"] = String.Format("{0}\\{1}", BinaryPathHelper.ErlangRoot.MakePathForCmd(), Path.DirectorySeparatorChar);
             Exe = Path.Combine(BinaryPathHelper.RabbitMqRoot, "sbin", "rabbitmq-server.bat");
 
             try
